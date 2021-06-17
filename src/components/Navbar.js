@@ -4,8 +4,13 @@ import {
   Toolbar,
   List,
   ListItem,
+  ListItemIcon,
+  ListItemText,
   IconButton,
   Drawer,
+  Divider,
+  useTheme,
+  makeStyles,
 } from "@material-ui/core";
 import {
   Menu,
@@ -13,9 +18,27 @@ import {
   PeopleAlt,
   Language,
   NotificationsNone,
+  Home,
+  LibraryBooks,
+  AccountCircle,
+  InsertChart,
+  FitnessCenter,
+  ChevronLeft, 
+  ChevronRight,
 } from "@material-ui/icons";
 
 import WorkoutSummary from "./WorkoutSummary";
+
+const useStyles = makeStyles((theme) => ({
+    drawerHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(0, 1),
+        
+        ...theme.mixins.toolbar,
+        justifyContent: 'flex-end',
+      },
+}));
 
 const workouts = [
   {
@@ -38,9 +61,17 @@ const workouts = [
 function Navbar() {
   const [open, setOpen] = useState(false);
 
+  const classes = useStyles();
+  const theme = useTheme();
+
   const handleDrawer = () => {
     setOpen(true);
   };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
       <AppBar style={{ background: "#bd0841" }} position="static">
@@ -75,8 +106,28 @@ function Navbar() {
       </AppBar>
 
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
+      <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeft /> : <ChevronRight />}
+          </IconButton>
+        </div>
+        <Divider/>
         <div>
-          <h3>This is a drawer</h3>
+        <List>
+          {['Home', 'Training Programs', 'Analytics', 'Profile', 'Friends', 'Exercises'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                  {index === 0 && <Home/>}
+                  {index === 1 && <LibraryBooks/>}
+                  {index === 2 && <InsertChart/>}
+                  {index === 3 && <AccountCircle/>}
+                  {index === 4 && <PeopleAlt/>}
+                  {index === 5 && <FitnessCenter/>}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
         </div>
       </Drawer>
 
